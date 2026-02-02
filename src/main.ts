@@ -1,12 +1,11 @@
 const display = document.querySelector(".display") as HTMLDivElement;
 const numberButtons = document.querySelectorAll("[data-num]");
 const operationButtons = document.querySelectorAll("[data-op]");
-const secondNumberButtons = document.querySelectorAll("[data-action]");
-const actionButtons = document.querySelectorAll("[data-action]");
 
 let currentValue = "0";
+let xNumber = "";
+let yNumber = "";
 let currentOperator: string | null = null;
-let yNumber: string;
 
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -19,39 +18,55 @@ numberButtons.forEach((button) => {
 });
 
 function handleNumberClick(value: string) {
-  if (currentValue === "0") {
-    currentValue = value;
-  } else {
-    currentValue += value;
+  // ainda NÃO escolheu operador → primeiro número
+  if (!currentOperator) {
+    xNumber += value;
+    display.textContent = xNumber;
   }
-
-  display.textContent = currentValue;
+  // operador já existe → segundo número
+  else {
+    yNumber += value;
+    display.textContent = xNumber + currentOperator + yNumber;
+  }
 }
 
-// para cada botão de operação (+ - x ÷)
 operationButtons.forEach((button) => {
-  // liga um "ouvinte" de clique no botão
   button.addEventListener("click", () => {
-    // pega o operador que está no HTML (data-op)
     const operator = button.getAttribute("data-op");
-
-    // se não existir, não faz nada
     if (!operator) return;
 
-    // guarda o operador
+    // só permite operador se já tiver primeiro número
+    if (!xNumber) return;
+
     currentOperator = operator;
-
-    // mostra no display
-    display.textContent = display.textContent + operator;
+    display.textContent = xNumber + operator;
   });
 });
 
-secondNumberButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const secondNumber = button.getAttribute("data-num");
+function calculate() {
+  if (!xNumber || !currentOperator || !yNumber) return;
 
-    if (!secondNumber) return;
+  let x: number = Number(xNumber);
+  let y: number = Number(yNumber);
+  let resultado = 0;
 
-    yNumber = secondNumber;
-  });
-});
+  switch (currentOperator) {
+    case "+":
+      resultado = x + y;
+
+      let resultadoConvert = resultado.toString();
+      let yConvert = y.toString();
+
+      x = resultado;
+      currentOperator = null;
+      yConvert = "";
+
+      display.textContent = resultadoConvert;
+    case "-":
+      break;
+    case "x":
+      break;
+    case "÷":
+      break;
+  }
+}
