@@ -1,11 +1,13 @@
 const display = document.querySelector(".display") as HTMLDivElement;
 const numberButtons = document.querySelectorAll("[data-num]");
 const operationButtons = document.querySelectorAll("[data-op]");
+const dataActionButtons = document.querySelector("[data-action]");
 
 let currentValue = "0";
 let xNumber = "";
 let yNumber = "";
 let currentOperator: string | null = null;
+const equalsButton = document.getElementById("equals");
 
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -54,19 +56,42 @@ function calculate() {
     case "+":
       resultado = x + y;
 
-      let resultadoConvert = resultado.toString();
-      let yConvert = y.toString();
-
-      x = resultado;
+      xNumber = resultado.toString();
+      yNumber = "";
       currentOperator = null;
-      yConvert = "";
+      display.textContent = xNumber;
 
-      display.textContent = resultadoConvert;
+      return;
     case "-":
-      break;
+      resultado = x - y;
+
+      xNumber = resultado.toString();
+      yNumber = "";
+      currentOperator = null;
+      display.textContent = xNumber;
+
+      return;
     case "x":
-      break;
+      resultado = x * y;
+
+      xNumber = resultado.toString();
+      yNumber = "";
+      currentOperator = null;
+      display.textContent = xNumber;
+
+      return;
     case "÷":
-      break;
+      resultado = x / y;
+
+      xNumber = resultado.toString();
+      yNumber = "";
+      currentOperator = null;
+      display.textContent = xNumber;
+
+      return;
   }
 }
+
+equalsButton?.addEventListener("click", (evento) => {
+  calculate();
+});
