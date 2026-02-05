@@ -7,7 +7,8 @@ let currentValue = "0";
 let xNumber = "";
 let yNumber = "";
 let currentOperator: string | null = null;
-const equalsButton = document.getElementById("equals");
+const equalsButton = document.querySelector('[data-action="equals"]');
+const clearButton = document.querySelector('[data-action="clear-all"]');
 
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -28,19 +29,27 @@ function handleNumberClick(value: string) {
   // operador já existe → segundo número
   else {
     yNumber += value;
+
+    // if (currentOperator == "*") {
+    //   currentOperator = "x";
+    // } else if (currentOperator == "/") {
+    //   currentOperator = "÷";
+    // }
+
     display.textContent = xNumber + currentOperator + yNumber;
   }
 }
 
 operationButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    const operator = button.getAttribute("data-op");
+    let operator = button.getAttribute("data-op");
     if (!operator) return;
 
     // só permite operador se já tiver primeiro número
     if (!xNumber) return;
 
     currentOperator = operator;
+
     display.textContent = xNumber + operator;
   });
 });
@@ -71,7 +80,7 @@ function calculate() {
       display.textContent = xNumber;
 
       return;
-    case "x":
+    case "*":
       resultado = x * y;
 
       xNumber = resultado.toString();
@@ -80,7 +89,7 @@ function calculate() {
       display.textContent = xNumber;
 
       return;
-    case "÷":
+    case "/":
       resultado = x / y;
 
       xNumber = resultado.toString();
@@ -92,6 +101,18 @@ function calculate() {
   }
 }
 
+function clearAll() {
+  xNumber = "";
+  currentOperator = null;
+  yNumber = "";
+
+  display.textContent = currentValue.toString();
+}
+
 equalsButton?.addEventListener("click", (evento) => {
   calculate();
+});
+
+clearButton?.addEventListener("click", () => {
+  clearAll();
 });
