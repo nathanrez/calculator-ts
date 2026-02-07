@@ -33,6 +33,12 @@ operationButtons.forEach((button) => {
         let operator = button.getAttribute("data-op");
         if (!operator)
             return;
+        if (operator == "*") {
+            operator = "x";
+        }
+        else if (operator == "/") {
+            operator = "÷";
+        }
         // só permite operador se já tiver primeiro número
         if (!xNumber)
             return;
@@ -61,14 +67,14 @@ function calculate() {
             currentOperator = null;
             display.textContent = xNumber;
             return;
-        case "*":
+        case "x":
             resultado = x * y;
             xNumber = resultado.toString();
             yNumber = "";
             currentOperator = null;
             display.textContent = xNumber;
             return;
-        case "/":
+        case "÷":
             resultado = x / y;
             xNumber = resultado.toString();
             yNumber = "";
@@ -97,7 +103,7 @@ function backspace() {
     else if (xNumber) {
         xNumber = xNumber.slice(0, -1);
         if (xNumber === "") {
-            xNumber = "0";
+            xNumber = "";
         }
         display.textContent = xNumber;
     }
@@ -112,11 +118,6 @@ backspaceButton === null || backspaceButton === void 0 ? void 0 : backspaceButto
     backspace();
 });
 export {};
-/*  if (currentOperator == "*") {
-    currentOperator = "x";
-  } else if (currentOperator == "/") {
-    currentOperator = "÷";
-  } */
 // proxima melhoria:
 // ao obter um resultado e apertar algum numero, esse numero aumenta o valor do resultado...
 // exemplo: resultado = 12. ao apertar o  numero 1, o display fica com 121.
