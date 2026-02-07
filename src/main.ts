@@ -1,14 +1,14 @@
 const display = document.querySelector(".display") as HTMLDivElement;
 const numberButtons = document.querySelectorAll("[data-num]");
 const operationButtons = document.querySelectorAll("[data-op]");
-const dataActionButtons = document.querySelector("[data-action]");
+const equalsButton = document.querySelector('[data-action="equals"]');
+const clearButton = document.querySelector('[data-action="clear-all"]');
+const backspaceButton = document.querySelector('[data-action = "backspace"]');
 
 let currentValue = "0";
 let xNumber = "";
 let yNumber = "";
 let currentOperator: string | null = null;
-const equalsButton = document.querySelector('[data-action="equals"]');
-const clearButton = document.querySelector('[data-action="clear-all"]');
 
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -29,12 +29,6 @@ function handleNumberClick(value: string) {
   // operador já existe → segundo número
   else {
     yNumber += value;
-
-    // if (currentOperator == "*") {
-    //   currentOperator = "x";
-    // } else if (currentOperator == "/") {
-    //   currentOperator = "÷";
-    // }
 
     display.textContent = xNumber + currentOperator + yNumber;
   }
@@ -109,6 +103,29 @@ function clearAll() {
   display.textContent = currentValue.toString();
 }
 
+function backspace() {
+  if (yNumber) {
+    yNumber = yNumber.slice(0, -1);
+
+    display.textContent = xNumber + currentOperator + yNumber;
+
+    return;
+  } else if (currentOperator) {
+    currentOperator = null;
+
+    display.textContent = xNumber;
+
+    return;
+  } else if (xNumber) {
+    xNumber = xNumber.slice(0, -1);
+
+    if (xNumber === "") {
+      xNumber = "0";
+    }
+    display.textContent = xNumber;
+  }
+}
+
 equalsButton?.addEventListener("click", (evento) => {
   calculate();
 });
@@ -116,3 +133,17 @@ equalsButton?.addEventListener("click", (evento) => {
 clearButton?.addEventListener("click", () => {
   clearAll();
 });
+
+backspaceButton?.addEventListener("click", () => {
+  backspace();
+});
+
+/*  if (currentOperator == "*") {
+    currentOperator = "x";
+  } else if (currentOperator == "/") {
+    currentOperator = "÷";
+  } */
+
+// proxima melhoria:
+// ao obter um resultado e apertar algum numero, esse numero aumenta o valor do resultado...
+// exemplo: resultado = 12. ao apertar o  numero 1, o display fica com 121.

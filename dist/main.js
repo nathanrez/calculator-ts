@@ -1,13 +1,13 @@
 const display = document.querySelector(".display");
 const numberButtons = document.querySelectorAll("[data-num]");
 const operationButtons = document.querySelectorAll("[data-op]");
-const dataActionButtons = document.querySelector("[data-action]");
+const equalsButton = document.querySelector('[data-action="equals"]');
+const clearButton = document.querySelector('[data-action="clear-all"]');
+const backspaceButton = document.querySelector('[data-action = "backspace"]');
 let currentValue = "0";
 let xNumber = "";
 let yNumber = "";
 let currentOperator = null;
-const equalsButton = document.querySelector('[data-action="equals"]');
-const clearButton = document.querySelector('[data-action="clear-all"]');
 numberButtons.forEach((button) => {
     button.addEventListener("click", () => {
         const value = button.getAttribute("data-num");
@@ -25,14 +25,6 @@ function handleNumberClick(value) {
     // operador já existe → segundo número
     else {
         yNumber += value;
-        if (currentOperator == "*") {
-            currentOperator = "x";
-            display.textContent = xNumber + currentOperator + yNumber;
-        }
-        else if (currentOperator == "/") {
-            currentOperator = "÷";
-            display.textContent = xNumber + currentOperator + yNumber;
-        }
         display.textContent = xNumber + currentOperator + yNumber;
     }
 }
@@ -91,11 +83,41 @@ function clearAll() {
     yNumber = "";
     display.textContent = currentValue.toString();
 }
+function backspace() {
+    if (yNumber) {
+        yNumber = yNumber.slice(0, -1);
+        display.textContent = xNumber + currentOperator + yNumber;
+        return;
+    }
+    else if (currentOperator) {
+        currentOperator = null;
+        display.textContent = xNumber;
+        return;
+    }
+    else if (xNumber) {
+        xNumber = xNumber.slice(0, -1);
+        if (xNumber === "") {
+            xNumber = "0";
+        }
+        display.textContent = xNumber;
+    }
+}
 equalsButton === null || equalsButton === void 0 ? void 0 : equalsButton.addEventListener("click", (evento) => {
     calculate();
 });
 clearButton === null || clearButton === void 0 ? void 0 : clearButton.addEventListener("click", () => {
     clearAll();
 });
+backspaceButton === null || backspaceButton === void 0 ? void 0 : backspaceButton.addEventListener("click", () => {
+    backspace();
+});
 export {};
+/*  if (currentOperator == "*") {
+    currentOperator = "x";
+  } else if (currentOperator == "/") {
+    currentOperator = "÷";
+  } */
+// proxima melhoria:
+// ao obter um resultado e apertar algum numero, esse numero aumenta o valor do resultado...
+// exemplo: resultado = 12. ao apertar o  numero 1, o display fica com 121.
 //# sourceMappingURL=main.js.map
