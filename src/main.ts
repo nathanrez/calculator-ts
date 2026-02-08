@@ -4,11 +4,13 @@ const operationButtons = document.querySelectorAll("[data-op]");
 const equalsButton = document.querySelector('[data-action="equals"]');
 const clearButton = document.querySelector('[data-action="clear-all"]');
 const backspaceButton = document.querySelector('[data-action = "backspace"]');
+const decimalsButton = document.querySelector('[data-action = "decimal"]');
 
 let currentValue = "0";
 let xNumber = "";
 let yNumber = "";
 let currentOperator: string | null = null;
+let calculoFeito = false;
 
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -21,13 +23,15 @@ numberButtons.forEach((button) => {
 });
 
 function handleNumberClick(value: string) {
+  if (!currentOperator && calculoFeito) {
+    clearAll();
+    calculoFeito = false;
+  }
   // ainda NÃO escolheu operador → primeiro número
-  if (!currentOperator) {
+  else if (!currentOperator) {
     xNumber += value;
     display.textContent = xNumber;
-  }
-  // operador já existe → segundo número
-  else {
+  } else {
     yNumber += value;
 
     display.textContent = xNumber + currentOperator + yNumber;
@@ -69,6 +73,7 @@ function calculate() {
       yNumber = "";
       currentOperator = null;
       display.textContent = xNumber;
+      calculoFeito = true;
 
       return;
     case "-":
@@ -78,6 +83,7 @@ function calculate() {
       yNumber = "";
       currentOperator = null;
       display.textContent = xNumber;
+      calculoFeito = true;
 
       return;
     case "x":
@@ -87,6 +93,7 @@ function calculate() {
       yNumber = "";
       currentOperator = null;
       display.textContent = xNumber;
+      calculoFeito = true;
 
       return;
     case "÷":
@@ -96,6 +103,7 @@ function calculate() {
       yNumber = "";
       currentOperator = null;
       display.textContent = xNumber;
+      calculoFeito = true;
 
       return;
   }
@@ -105,6 +113,7 @@ function clearAll() {
   xNumber = "";
   currentOperator = null;
   yNumber = "";
+  calculoFeito = false;
 
   display.textContent = currentValue.toString();
 }
@@ -132,8 +141,24 @@ function backspace() {
   }
 }
 
+function historyCalc() {
+  const calcMemory = [""];
+}
+
+function decimalClick() {
+  if (xNumber) {
+    xNumber = `${xNumber},`;
+    display.textContent = xNumber;
+  }
+}
+
+decimalsButton?.addEventListener("click", (evento) => {
+  decimalClick();
+});
+
 equalsButton?.addEventListener("click", (evento) => {
   calculate();
+  console.log(calculoFeito);
 });
 
 clearButton?.addEventListener("click", () => {
@@ -143,7 +168,3 @@ clearButton?.addEventListener("click", () => {
 backspaceButton?.addEventListener("click", () => {
   backspace();
 });
-
-// proxima melhoria:
-// ao obter um resultado e apertar algum numero, esse numero aumenta o valor do resultado...
-// exemplo: resultado = 12. ao apertar o  numero 1, o display fica com 121.
