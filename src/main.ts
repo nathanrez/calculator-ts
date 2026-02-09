@@ -6,12 +6,16 @@ const clearButton = document.querySelector('[data-action="clear-all"]');
 const backspaceButton = document.querySelector('[data-action = "backspace"]');
 const decimalsButton = document.querySelector('[data-action = "decimal"]');
 const historyButton = document.querySelector('[data-action = "history"]');
+const historyModal = document.querySelector(".history-modal") as HTMLDivElement | null;
+const historyList = document.querySelector(".history-list") as HTMLUListElement | null;
+const historyClose = document.getElementById("closeHistory");
 
 let currentValue = "0";
 let xNumber = "";
 let yNumber = "";
 let currentOperator: string | null = null;
 let calculoFeito = false;
+let arrayHistorico: string[] = [];
 
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -28,11 +32,6 @@ function handleNumberClick(value: string) {
     clearAll();
     calculoFeito = false;
 
-    xNumber += value;
-    display.textContent = xNumber;
-  }
-  // ainda NÃO escolheu operador → primeiro número
-  else if (!currentOperator) {
     xNumber += value;
     display.textContent = xNumber;
   }
@@ -73,11 +72,14 @@ function calculate() {
   let x = Number(xNumber.replace(",", "."));
   let y = Number(yNumber.replace(",", "."));
   let resultado = 0;
+  const operadorHistorico = currentOperator;
 
   switch (currentOperator) {
     case "+":
       resultado = x + y;
 
+      arrayHistorico.push(
+        `${xNumber.replace(".", ",")} ${operadorHistorico} ${yNumber} = ${resultado.toString().replace(".", ",")}`);
       xNumber = resultado.toString();
       yNumber = "";
       currentOperator = null;
@@ -88,6 +90,8 @@ function calculate() {
     case "-":
       resultado = x - y;
 
+      arrayHistorico.push(
+        `${xNumber.replace(".", ",")} ${operadorHistorico} ${yNumber} = ${resultado.toString().replace(".", ",")}`);
       xNumber = resultado.toString();
       yNumber = "";
       currentOperator = null;
@@ -98,6 +102,8 @@ function calculate() {
     case "x":
       resultado = x * y;
 
+      arrayHistorico.push(
+        `${xNumber.replace(".", ",")} ${operadorHistorico} ${yNumber} = ${resultado.toString().replace(".", ",")}`);
       xNumber = resultado.toString();
       yNumber = "";
       currentOperator = null;
@@ -108,6 +114,8 @@ function calculate() {
     case "÷":
       resultado = x / y;
 
+      arrayHistorico.push(
+        `${xNumber.replace(".", ",")} ${operadorHistorico} ${yNumber} = ${resultado.toString().replace(".", ",")}`);
       xNumber = resultado.toString();
       yNumber = "";
       currentOperator = null;
@@ -164,10 +172,41 @@ function decimalCalc() {
   }
 }
 
-function historyCalc() {}
+function historyCalc() {
+  if (!arrayHistorico.length) {
+    console.log("Histórico vazio");
+    return;
+  }
 
-historyButton?.addEventListener("click", (evento) => {
-  historyCalc();
+  console.log("Histórico:");
+  arrayHistorico.forEach((item) => console.log(item));
+}
+
+function renderHistory() {
+  if (!historyList) return;
+
+  historyList.innerHTML = "";
+  const lastTen = arrayHistorico.slice(-10).reverse();
+
+  if (!lastTen.length) {
+    historyList.innerHTML = "<li>Sem histórico ainda</li>";
+    return;
+  }
+
+  lastTen.forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    historyList.appendChild(li);
+  });
+}
+
+historyButton?.addEventListener("click", () => {
+  renderHistory(); 
+  historyModal?.classList.add("open");
+});
+
+historyClose?.addEventListener("click", () => {
+  historyModal?.classList.remove("open");
 });
 
 decimalsButton?.addEventListener("click", (evento) => {

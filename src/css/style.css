@@ -116,3 +116,75 @@ button[data-action="decimal"] {
 button[data-action="decimal"]:hover {
   background: #334155;
 }
+
+.history-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+h2 {
+  color: #fff;
+}
+
+.history-modal.open {
+  display: flex;
+}
+
+.history-box {
+  background: #121212;
+  width: 320px;
+  max-height: 420px;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.history-header h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.close-history {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close-history:hover {
+  color: #fff;
+}
+
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.history-list li {
+  padding: 8px 6px;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.history-list li:last-child {
+  border-bottom: none;
+}
