@@ -27,8 +27,15 @@ function handleNumberClick(value: string) {
   if (!currentOperator && calculoFeito) {
     clearAll();
     calculoFeito = false;
+
     xNumber += value;
     display.textContent = xNumber;
+  }
+  // ainda NÃO escolheu operador → primeiro número
+  else if (!currentOperator) {
+    xNumber += value;
+    display.textContent = xNumber;
+
   }
   // ainda NÃO escolheu operador → primeiro número
   else if (!currentOperator) {
@@ -166,10 +173,26 @@ historyButton?.addEventListener("click", (evento) => {
 
 decimalsButton?.addEventListener("click", (evento) => {
   decimalCalc();
+
+function historyCalc() {
+  const calcMemory = [""];
+}
+
+function decimalClick() {
+  if (xNumber) {
+    xNumber = `${xNumber},`;
+    display.textContent = xNumber;
+  }
+}
+
+decimalsButton?.addEventListener("click", (evento) => {
+  decimalClick();
+
 });
 
 equalsButton?.addEventListener("click", (evento) => {
   calculate();
+  console.log(calculoFeito);
 });
 
 clearButton?.addEventListener("click", () => {
