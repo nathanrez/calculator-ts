@@ -5,6 +5,7 @@ const equalsButton = document.querySelector('[data-action="equals"]');
 const clearButton = document.querySelector('[data-action="clear-all"]');
 const backspaceButton = document.querySelector('[data-action = "backspace"]');
 const decimalsButton = document.querySelector('[data-action = "decimal"]');
+const historyButton = document.querySelector('[data-action = "history"]');
 let currentValue = "0";
 let xNumber = "";
 let yNumber = "";
@@ -22,6 +23,13 @@ function handleNumberClick(value) {
     if (!currentOperator && calculoFeito) {
         clearAll();
         calculoFeito = false;
+        xNumber += value;
+        display.textContent = xNumber;
+    }
+    // ainda NÃO escolheu operador → primeiro número
+    else if (!currentOperator) {
+        xNumber += value;
+        display.textContent = xNumber;
     }
     // ainda NÃO escolheu operador → primeiro número
     else if (!currentOperator) {
@@ -54,8 +62,8 @@ operationButtons.forEach((button) => {
 function calculate() {
     if (!xNumber || !currentOperator || !yNumber)
         return;
-    let x = Number(xNumber);
-    let y = Number(yNumber);
+    let x = Number(xNumber.replace(",", "."));
+    let y = Number(yNumber.replace(",", "."));
     let resultado = 0;
     switch (currentOperator) {
         case "+":
@@ -118,17 +126,26 @@ function backspace() {
         display.textContent = xNumber;
     }
 }
-function historyCalc() {
-    const calcMemory = [""];
-}
-function decimalClick() {
-    if (xNumber) {
-        xNumber = `${xNumber},`;
+function decimalCalc() {
+    if (!currentOperator) {
+        if (xNumber.includes(","))
+            return;
+        xNumber = xNumber === "" ? "0," : xNumber + ",";
         display.textContent = xNumber;
     }
+    else {
+        if (yNumber.includes(","))
+            return;
+        yNumber = yNumber === "" ? "0," : yNumber + ",";
+        display.textContent = xNumber + currentOperator + yNumber;
+    }
 }
+function historyCalc() { }
+historyButton === null || historyButton === void 0 ? void 0 : historyButton.addEventListener("click", (evento) => {
+    historyCalc();
+});
 decimalsButton === null || decimalsButton === void 0 ? void 0 : decimalsButton.addEventListener("click", (evento) => {
-    decimalClick();
+    decimalCalc();
 });
 equalsButton === null || equalsButton === void 0 ? void 0 : equalsButton.addEventListener("click", (evento) => {
     calculate();
