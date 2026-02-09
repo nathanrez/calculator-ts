@@ -4,10 +4,12 @@ const operationButtons = document.querySelectorAll("[data-op]");
 const equalsButton = document.querySelector('[data-action="equals"]');
 const clearButton = document.querySelector('[data-action="clear-all"]');
 const backspaceButton = document.querySelector('[data-action = "backspace"]');
+const decimalsButton = document.querySelector('[data-action = "decimal"]');
 let currentValue = "0";
 let xNumber = "";
 let yNumber = "";
 let currentOperator = null;
+let calculoFeito = false;
 numberButtons.forEach((button) => {
     button.addEventListener("click", () => {
         const value = button.getAttribute("data-num");
@@ -17,12 +19,17 @@ numberButtons.forEach((button) => {
     });
 });
 function handleNumberClick(value) {
-    // ainda NÃO escolheu operador → primeiro número
-    if (!currentOperator) {
+    if (!currentOperator && calculoFeito) {
+        clearAll();
+        calculoFeito = false;
         xNumber += value;
         display.textContent = xNumber;
     }
-    // operador já existe → segundo número
+    // ainda NÃO escolheu operador → primeiro número
+    else if (!currentOperator) {
+        xNumber += value;
+        display.textContent = xNumber;
+    }
     else {
         yNumber += value;
         display.textContent = xNumber + currentOperator + yNumber;
@@ -49,8 +56,8 @@ operationButtons.forEach((button) => {
 function calculate() {
     if (!xNumber || !currentOperator || !yNumber)
         return;
-    let x = Number(xNumber);
-    let y = Number(yNumber);
+    let x = Number(xNumber.replace(",", "."));
+    let y = Number(yNumber.replace(",", "."));
     let resultado = 0;
     switch (currentOperator) {
         case "+":
@@ -59,6 +66,7 @@ function calculate() {
             yNumber = "";
             currentOperator = null;
             display.textContent = xNumber;
+            calculoFeito = true;
             return;
         case "-":
             resultado = x - y;
@@ -66,6 +74,7 @@ function calculate() {
             yNumber = "";
             currentOperator = null;
             display.textContent = xNumber;
+            calculoFeito = true;
             return;
         case "x":
             resultado = x * y;
@@ -73,6 +82,7 @@ function calculate() {
             yNumber = "";
             currentOperator = null;
             display.textContent = xNumber;
+            calculoFeito = true;
             return;
         case "÷":
             resultado = x / y;
@@ -80,6 +90,7 @@ function calculate() {
             yNumber = "";
             currentOperator = null;
             display.textContent = xNumber;
+            calculoFeito = true;
             return;
     }
 }
@@ -87,6 +98,7 @@ function clearAll() {
     xNumber = "";
     currentOperator = null;
     yNumber = "";
+    calculoFeito = false;
     display.textContent = currentValue.toString();
 }
 function backspace() {
@@ -108,6 +120,26 @@ function backspace() {
         display.textContent = xNumber;
     }
 }
+function decimalCalc() {
+    if (!currentOperator) {
+        if (xNumber.includes(","))
+            return;
+        xNumber = xNumber === "" ? "0," : xNumber + ",";
+        display.textContent = xNumber;
+    }
+    else {
+        if (yNumber.includes(","))
+            return;
+        yNumber = yNumber === "" ? "0," : yNumber + ",";
+        display.textContent = xNumber + currentOperator + yNumber;
+    }
+}
+function historyCalc() {
+    const calcMemory = [""];
+}
+decimalsButton === null || decimalsButton === void 0 ? void 0 : decimalsButton.addEventListener("click", (evento) => {
+    decimalCalc();
+});
 equalsButton === null || equalsButton === void 0 ? void 0 : equalsButton.addEventListener("click", (evento) => {
     calculate();
 });
@@ -118,7 +150,4 @@ backspaceButton === null || backspaceButton === void 0 ? void 0 : backspaceButto
     backspace();
 });
 export {};
-// proxima melhoria:
-// ao obter um resultado e apertar algum numero, esse numero aumenta o valor do resultado...
-// exemplo: resultado = 12. ao apertar o  numero 1, o display fica com 121.
 //# sourceMappingURL=main.js.map
